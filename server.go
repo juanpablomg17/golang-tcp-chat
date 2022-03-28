@@ -82,6 +82,11 @@ func (s *server) listRooms(c *client, args []string) {
 		rooms = append(rooms, name)
 	}
 
+	if len(rooms) == 0 {
+		c.msg("There are no rooms")
+		return
+	}
+
 	c.msg(fmt.Sprintf("Avaible rooms are: %s", strings.Join(rooms, ", ")))
 }
 
