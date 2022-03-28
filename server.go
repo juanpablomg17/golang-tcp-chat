@@ -20,17 +20,19 @@ func newServer() *server {
 	}
 }
 
-func (s *server) run() {
-	for cmd := range s.commands {
+func (host *server) run() {
+	for cmd := range host.commands {
 		switch cmd.id {
 		case CMD_NICK:
-			s.nick(cmd.client, cmd.args)
+			host.nick(cmd.client, cmd.args)
 		case CMD_JOIN:
-			s.join(cmd.client, cmd.args)
+			host.join(cmd.client, cmd.args)
 		case CMD_ROOMS:
-			s.listRooms(cmd.client, cmd.args)
+			host.listRooms(cmd.client, cmd.args)
+		case CMD_MESSAGE:
+			host.msg(cmd.client, cmd.args)
 		case CMD_QUIT:
-			s.quit(cmd.client, cmd.args)
+			host.quit(cmd.client, cmd.args)
 		}
 	}
 }
@@ -84,8 +86,9 @@ func (s *server) listRooms(c *client, args []string) {
 }
 
 func (s *server) msg(c *client, args []string) {
-	if c.room != nil {
+	if c.room == nil {
 		c.err(errors.New("You are in a room, you must leave it before quitting"))
+		return
 	}
 	c.room.broadcast(c, c.nick+": "+strings.Join(args[1:len(args)], " "))
 }

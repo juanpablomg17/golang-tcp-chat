@@ -30,7 +30,7 @@ func (c *client) readInput() {
 		cmd := strings.TrimSpace(args[0])
 
 		switch cmd {
-		case "/nick":
+		case "/nickName":
 			c.commands <- command{
 				id:     CMD_NICK,
 				client: c,
@@ -45,6 +45,12 @@ func (c *client) readInput() {
 		case "/rooms":
 			c.commands <- command{
 				id:     CMD_ROOMS,
+				client: c,
+				args:   args,
+			}
+		case "/msg":
+			c.commands <- command{
+				id:     CMD_MESSAGE,
 				client: c,
 				args:   args,
 			}
